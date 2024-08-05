@@ -58,6 +58,9 @@ public class BlackJackGameLogic : MonoBehaviour
     [SerializeField]
     TMP_Text YesNoText;
 
+    [SerializeField]
+    TMP_Text playInstructions;
+
 
     //misc variables
     int takenSlots = 0; //for cards
@@ -283,6 +286,7 @@ public class BlackJackGameLogic : MonoBehaviour
         AIFold = false;
         WinLoseText.text = "";
         YesNoText.text = "";
+        playInstructions.text = "";
         balanceUpdated = false;
         gameActive = true;
         hasGameEnded = false;
@@ -303,6 +307,8 @@ public class BlackJackGameLogic : MonoBehaviour
 
         string playAgainPromtText = "Press 'y' to play again\nPress 'n' to quit";
 
+        playInstructions.text = "Press 'E' to pick up card\r\nPress 'F' to fold\r\nPress 'ESC' to quit";
+
         //check card's total value and then play turn
         if (handSum <= 21)
         {
@@ -313,6 +319,10 @@ public class BlackJackGameLogic : MonoBehaviour
                 PickUpCard();
                 AIDesicionMaking();
             }
+            else if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                Application.Quit();
+            }
 
             StartCoroutine(Fold());
         }
@@ -320,6 +330,11 @@ public class BlackJackGameLogic : MonoBehaviour
         if(!hasGameEnded)
         {
             StartCoroutine(Over21Check());
+        }
+
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
         }
         
     }
@@ -375,6 +390,7 @@ public class BlackJackGameLogic : MonoBehaviour
                     Debug.Log("You Lose!");
                     WinLoseText.text = "You Lose!";
                     YesNoText.text = playAgainPromtText;
+                    playInstructions.text = "";
                     hasGameEnded = true;
 
                     //call reset function
@@ -398,6 +414,7 @@ public class BlackJackGameLogic : MonoBehaviour
                     Debug.Log("You Win!");
                     WinLoseText.text = "You Win!";
                     YesNoText.text = playAgainPromtText;
+                    playInstructions.text = "";
                     hasGameEnded = true;
 
                     DestroyPokerChips();
@@ -414,6 +431,7 @@ public class BlackJackGameLogic : MonoBehaviour
                 Debug.Log("You Draw!");
                 WinLoseText.text = "You Draw!";
                 YesNoText.text = playAgainPromtText;
+                playInstructions.text = "";
                 hasGameEnded = true;
 
                 DestroyPokerChips();
@@ -511,6 +529,7 @@ public class BlackJackGameLogic : MonoBehaviour
             Debug.Log("You have chosen to play again.");
             WinLoseText.text = "";
             YesNoText.text = "";
+            playInstructions.text = "Press 'E' to pick up card\r\nPress 'F' to fold\r\nPress 'ESC' to quit";
 
             if (playerWallet.currentBalance >= 100)
             {
@@ -534,7 +553,9 @@ public class BlackJackGameLogic : MonoBehaviour
             playerQuit.Invoke();
             WinLoseText.text = "";
             YesNoText.text = "";
-           
+            playInstructions.text = "";
+            Application.Quit();
+
         }
     }
 

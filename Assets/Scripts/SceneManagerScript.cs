@@ -10,6 +10,16 @@ public class SceneManagerScript : MonoBehaviour
         SceneManager.LoadScene("GameScene");
     }
 
+    public void MainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void InstructionsScreen()
+    {
+        SceneManager.LoadScene("InstructionsScreen");
+    }
+
     public void QuitGame()
     {
         Application.Quit();
