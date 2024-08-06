@@ -919,9 +919,11 @@ MonoBehaviour:
     to add anymore cards to your 'hand'.\n\nRules & Goals:\nThe goal of Black Jack
     is to get your hand as close to the numerical value of '21'. \nYou go over, you
     lose.\nIn order to win, you need to stay equal to or below '21' and have a hand
-    higher than the dealer.\n\nCards:\nThe cards numberical value is tied to the
-    number showed on the card.\nAce (A) is considered a '1'.\nQueen, Kind & Joker
-    (Q, K & J) are classed as '10'.\n\n\n"
+    higher than the dealer.\n\nEach Round costs 100.\nYou start with 500, if you
+    lose, you lose 100. \nIf you win, you gain 150.\nIf you lose all your funds or
+    cannot afford to play another round, game over. \n\nCards:\nThe cards numberical
+    value is tied to the number showed on the card.\nAce (A) is considered a '1'.\nQueen,
+    Kind & Joker (Q, K & J) are classed as '10'.\n\n\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -948,8 +950,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 39.87
-  m_fontSizeBase: 39.87
+  m_fontSize: 32.1
+  m_fontSizeBase: 32.1
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

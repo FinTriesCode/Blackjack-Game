@@ -50,7 +50,7 @@ public class BlackJackGameLogic : MonoBehaviour
     [SerializeField] private UnityEvent playerWin;
     [SerializeField] private UnityEvent playerReplay;
     [SerializeField] private UnityEvent playerQuit;
-    
+
     //Text
     [SerializeField]
     TMP_Text WinLoseText;
@@ -60,6 +60,12 @@ public class BlackJackGameLogic : MonoBehaviour
 
     [SerializeField]
     TMP_Text playInstructions;
+
+    [SerializeField]
+    TMP_Text playerBalance;
+
+    [SerializeField]
+    TMP_Text outOfFundsText;
 
 
     //misc variables
@@ -287,6 +293,10 @@ public class BlackJackGameLogic : MonoBehaviour
         WinLoseText.text = "";
         YesNoText.text = "";
         playInstructions.text = "";
+
+        string balance = $"Your Balance: {playerWallet.currentBalance}";
+        playerBalance.text = balance;
+
         balanceUpdated = false;
         gameActive = true;
         hasGameEnded = false;
@@ -308,6 +318,10 @@ public class BlackJackGameLogic : MonoBehaviour
         string playAgainPromtText = "Press 'y' to play again\nPress 'n' to quit";
 
         playInstructions.text = "Press 'E' to pick up card\r\nPress 'F' to fold\r\nPress 'ESC' to quit";
+
+
+        string balance = $"Your Balance: {playerWallet.currentBalance}";
+        playerBalance.text = balance;
 
         //check card's total value and then play turn
         if (handSum <= 21)
@@ -391,6 +405,10 @@ public class BlackJackGameLogic : MonoBehaviour
                     WinLoseText.text = "You Lose!";
                     YesNoText.text = playAgainPromtText;
                     playInstructions.text = "";
+
+                    string balance = $"Your Balance: {playerWallet.currentBalance}";
+                    playerBalance.text = balance;
+
                     hasGameEnded = true;
 
                     //call reset function
@@ -415,6 +433,10 @@ public class BlackJackGameLogic : MonoBehaviour
                     WinLoseText.text = "You Win!";
                     YesNoText.text = playAgainPromtText;
                     playInstructions.text = "";
+
+                    string balance = $"Your Balance: {playerWallet.currentBalance}";
+                    playerBalance.text = balance;
+
                     hasGameEnded = true;
 
                     DestroyPokerChips();
@@ -432,12 +454,21 @@ public class BlackJackGameLogic : MonoBehaviour
                 WinLoseText.text = "You Draw!";
                 YesNoText.text = playAgainPromtText;
                 playInstructions.text = "";
+
+                string balance = $"Your Balance: {playerWallet.currentBalance}";
+                playerBalance.text = balance;
+
                 hasGameEnded = true;
 
                 DestroyPokerChips();
                 PlayerReplayOption();
 
             }
+        }
+
+        if (playerWallet.currentBalance <= 0 || playerWallet.currentBalance <= 100)
+        {
+            lackingFunds.Invoke();
         }
 
         yield return StartCoroutine(Wait(1.0f));
@@ -531,6 +562,9 @@ public class BlackJackGameLogic : MonoBehaviour
             YesNoText.text = "";
             playInstructions.text = "Press 'E' to pick up card\r\nPress 'F' to fold\r\nPress 'ESC' to quit";
 
+            string balance = $"Your Balance: {playerWallet.currentBalance}";
+            playerBalance.text = balance;
+
             if (playerWallet.currentBalance >= 100)
             {
                 //Player has enough funds and is continuiing
@@ -554,6 +588,7 @@ public class BlackJackGameLogic : MonoBehaviour
             WinLoseText.text = "";
             YesNoText.text = "";
             playInstructions.text = "";
+            playerBalance.text = "";
             Application.Quit();
 
         }
@@ -586,4 +621,12 @@ public class BlackJackGameLogic : MonoBehaviour
             gameActive = false;
         }
     }
+
+    public void NoMoreFunds()
+    {
+        outOfFundsText.text = "You are out of funds!\r\nYou have lost.";
+        YesNoText.text = "Press 'n' to exit the game\r\nBetter luck next time.";
+
+        playerBalance.text = "";
+    }    
 }
