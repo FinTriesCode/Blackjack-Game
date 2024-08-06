@@ -44,12 +44,9 @@ public class BlackJackGameLogic : MonoBehaviour
 
     [Header("Events")]
     [SerializeField] private UnityEvent lackingFunds;
-    [SerializeField] private UnityEvent increaseBalance;
-    [SerializeField] private UnityEvent decreaseBalance;
     [SerializeField] private UnityEvent playerLose;
     [SerializeField] private UnityEvent playerWin;
-    [SerializeField] private UnityEvent playerReplay;
-    [SerializeField] private UnityEvent playerQuit;
+ 
 
     //Text
     [SerializeField]
@@ -365,7 +362,6 @@ public class BlackJackGameLogic : MonoBehaviour
             hasGameEnded = true;
             
             //lose money 
-            decreaseBalance.Invoke();
             balanceUpdated = true;
             playerLose.Invoke();
             Debug.Log("You Lose!");
@@ -392,13 +388,25 @@ public class BlackJackGameLogic : MonoBehaviour
             gameActive = false;
 
             Debug.Log("You Fold!");
+
+            if (playerWallet.currentBalance <= 0 || playerWallet.currentBalance < 100)
+            {
+                lackingFunds.Invoke();
+                Debug.Log("You do not have enough funds to continue.");
+                yield return StartCoroutine(Wait(1.0f)); // Exit the coroutine early since the player cannot afford to continue
+
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    Application.Quit();
+                }
+            }
+
             if (handSum > 21 || AIHandSum > handSum)
             {
                 if(!balanceUpdated)
                 {   
                     gameActive = false;
                     //lose money
-                    decreaseBalance.Invoke();
                     balanceUpdated = true;
                     playerLose.Invoke();
                     Debug.Log("You Lose!");
@@ -426,7 +434,6 @@ public class BlackJackGameLogic : MonoBehaviour
                 {
                     gameActive = false;
                     //win money
-                    increaseBalance.Invoke();
                     balanceUpdated = true;
                     playerWin.Invoke();
                     Debug.Log("You Win!");
@@ -441,6 +448,11 @@ public class BlackJackGameLogic : MonoBehaviour
 
                     DestroyPokerChips();
                     PlayerReplayOption();
+
+                    if (Input.GetKeyDown(KeyCode.Escape))
+                    {
+                        Application.Quit();
+                    }
                 }
 
 
@@ -448,7 +460,6 @@ public class BlackJackGameLogic : MonoBehaviour
             else //draw
             {
                 gameActive = false;
-                increaseBalance.Invoke();
                 balanceUpdated = true;
                 Debug.Log("You Draw!");
                 WinLoseText.text = "You Draw!";
@@ -463,12 +474,22 @@ public class BlackJackGameLogic : MonoBehaviour
                 DestroyPokerChips();
                 PlayerReplayOption();
 
+                if (Input.GetKeyDown(KeyCode.Escape))
+                {
+                    Application.Quit();
+                }
+
             }
         }
 
-        if (playerWallet.currentBalance <= 0 || playerWallet.currentBalance <= 100)
+        if (playerWallet.currentBalance <= 0 || playerWallet.currentBalance < 100)
         {
             lackingFunds.Invoke();
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                Application.Quit();
+            }
         }
 
         yield return StartCoroutine(Wait(1.0f));
@@ -568,12 +589,10 @@ public class BlackJackGameLogic : MonoBehaviour
             if (playerWallet.currentBalance >= 100)
             {
                 //Player has enough funds and is continuiing
-                playerReplay.Invoke();
                 ResetGameplayLoop();
             }
             else
             {
-                playerQuit.Invoke();
                 Debug.Log("You cannot play due to a lack of funds.");
                 ClearTable();
             }
@@ -584,13 +603,28 @@ public class BlackJackGameLogic : MonoBehaviour
             hasMadeReplayDecision = true;
 
             Debug.Log("Player Stop Playing and Quit");
-            playerQuit.Invoke();
             WinLoseText.text = "";
             YesNoText.text = "";
             playInstructions.text = "";
             playerBalance.text = "";
             Application.Quit();
 
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
+        if (playerWallet.currentBalance < 100)
+        {
+            lackingFunds.Invoke();
+            WinLoseText.text = "";
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                Application.Quit();
+            }
         }
     }
 
@@ -625,7 +659,7 @@ public class BlackJackGameLogic : MonoBehaviour
     public void NoMoreFunds()
     {
         outOfFundsText.text = "You are out of funds!\r\nYou have lost.";
-        YesNoText.text = "Press 'n' to exit the game\r\nBetter luck next time.";
+        YesNoText.text = "Press 'ESC' to exit the game\r\nBetter luck next time.";
 
         playerBalance.text = "";
     }    
